@@ -4,11 +4,11 @@
 
 A demanda agregada é estimada como:
 
-\[
+$$
 q_c = \beta_0 + \beta_p p_f + \beta_I y + \beta_b p_b + \varepsilon.
-\]
+$$
 
-Como todas as variáveis relevantes estão em logaritmo, `beta_p` é a elasticidade-preço própria da demanda.
+Como todas as variáveis relevantes estão em logaritmo, $\beta_p$ é a elasticidade-preço própria da demanda.
 
 ## 2. Problema de endogeneidade
 
@@ -20,15 +20,15 @@ O preço real do milho é usado como deslocador de custo/oferta. A intuição é
 
 A condição de relevância é avaliada pelo primeiro estágio:
 
-\[
+$$
 p_f = \pi_0 + Z \pi + \gamma_I y + \gamma_b p_b + v.
-\]
+$$
 
 A condição de exogeneidade é substantiva e deve ser defendida economicamente.
 
 ## 4. 2SLS
 
-A segunda etapa usa a variação prevista de `pf` pelo conjunto de instrumentos `Z`, mantendo os controles `y` e `pb`.
+A segunda etapa usa a variação prevista de $pf$ pelo conjunto de instrumentos $Z$, mantendo os controles $y$ e $p_b $.
 
 ## 5. Instrumentos fracos
 
