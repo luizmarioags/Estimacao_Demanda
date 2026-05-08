@@ -4,9 +4,9 @@ Pacote de replicação para a **Lista de Exercícios 1: Estimação de Função 
 
 Este pacote implementa, em **Stata**, **R** e **Python**, a estimação da demanda por galeto:
 
-\[
+$$
 q_c = \beta_0 + \beta_p p_f + \beta_I y + \beta_b p_b + \varepsilon
-\]
+$$
 
 onde:
 
