@@ -33,14 +33,23 @@ suppressPackageStartupMessages({
   library(scales)
 })
 
-ROOT <- normalizePath(".", winslash = "/", mustWork = FALSE)
-RAW_DIR <- file.path(ROOT, "data", "raw")
+ROOT          <- normalizePath(".", winslash = "/", mustWork = FALSE)
+RAW_DIR       <- file.path(ROOT, "data", "raw")
 PROCESSED_DIR <- file.path(ROOT, "data", "processed")
-TABLE_DIR <- file.path(ROOT, "output", "tables")
-FIG_DIR <- file.path(ROOT, "output", "figures")
-LOG_DIR <- file.path(ROOT, "output", "logs")
 
-for (d in c(RAW_DIR, PROCESSED_DIR, TABLE_DIR, FIG_DIR, LOG_DIR)) {
+# Subdiretórios de output (nível base).
+TABLE_DIR <- file.path(ROOT, "output", "tables")
+FIG_DIR   <- file.path(ROOT, "output", "figures")
+LOG_DIR   <- file.path(ROOT, "output", "logs")
+
+# Subdiretórios R dentro de cada pasta de output.
+TABLE_DIR_R <- file.path(TABLE_DIR, "R")
+FIG_DIR_R   <- file.path(FIG_DIR,   "R")
+LOG_DIR_R   <- file.path(LOG_DIR,   "R")
+
+for (d in c(RAW_DIR, PROCESSED_DIR,
+            TABLE_DIR, FIG_DIR, LOG_DIR,
+            TABLE_DIR_R, FIG_DIR_R, LOG_DIR_R)) {
   if (!dir.exists(d)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 }
 
