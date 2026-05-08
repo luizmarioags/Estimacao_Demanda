@@ -1,0 +1,11 @@
+model,beta_p,std_error,conf_low,conf_high,n,first_stage_F_robust_not_MOP,note
+Z1,-1.658789107400128,0.9906283760149079,-3.6004207243893473,0.28284250958909163,40,3.2451213536349175,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z2,-0.2721542095399958,0.16110337159436286,-0.587916817864947,0.04360839878495537,40,5.711559434713527,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z3,-0.2716575273473389,0.1687015164457625,-0.6023124995810334,0.05899744488635561,40,5.547619748354291,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z4,-3.893954616591646,6.081398057567002,-15.81349480942297,8.025585576239678,39,0.37678586087620625,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z5,-0.2641221576257914,0.3057533103899197,-0.863398645990034,0.33515433073845124,39,7.145158020512223,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z6,-0.8828167190297472,0.26094155995375423,-1.3942621765391054,-0.3713712615203889,40,15.579211018184864,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z7,-0.33250961856751104,0.1536784603138649,-0.6337194007826863,-0.03129983635233585,40,3.85062692061687,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z8,-0.3128706793196722,0.1883218261769343,-0.6819814586264634,0.056240099987118986,40,6.320952026316032,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z9,-1.8216677258962737,1.2497145414838864,-4.2711082272046905,0.6277727754121434,39,2.055647948754078,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
+Z10,-0.29450498172687567,0.29288695789220626,-0.8685634191955999,0.27955345574184853,39,7.614767241181722,"Para o teste oficial de instrumentos fracos da lista, use Stata/04_iv_2sls_weakivtest.do"
