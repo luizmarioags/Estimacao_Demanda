@@ -1,0 +1,5 @@
+Base: broiler/chicken demand
+Fonte baixada: https://mitocw.ups.edu.ec/courses/economics/14-271-industrial-organization-i-fall-2005/assignments/broiler.csv
+Descrição: dados anuais de demanda por galeto/frango de corte usados em Epple e McCallum e em exercícios de Economia Industrial.
+Arquivo operacional do pacote: data/raw/chicken_demand.csv
+Observação: o pacote constrói qc, pf, y, pb e pc em logs a partir das variáveis brutas.
