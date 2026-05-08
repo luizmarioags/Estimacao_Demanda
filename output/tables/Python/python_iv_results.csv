@@ -1,0 +1,11 @@
+model,instruments,beta_p,std_error,conf_low,conf_high,n,first_stage_F_robust_not_MOP,note
+Z1,pc,-1.1371062576172601,0.19069477375216243,-1.5108680141714985,-0.7633445010630218,40,3.2451213536354446,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z2,pc pc2,-0.9680272002035343,0.12869460146189926,-1.2202686190688568,-0.7157857813382118,40,5.711559434713727,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z3,pc pc2 pc3,-0.9140912741765731,0.12517178765689355,-1.1594279779840844,-0.6687545703690617,40,5.547619748353115,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z4,pc_l1,-1.3456840348427137,0.25817027391160835,-1.851697771709466,-0.8396702979759614,39,0.3767858608759406,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z5,pc_l1 pc2_l1,-1.200766947003551,0.21138848822267753,-1.615088383919999,-0.786445510087103,39,7.145158020511328,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z6,exp_pc,-0.9363923641155141,0.11574683701192949,-1.163256164658896,-0.7095285635721322,40,15.579211018186099,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z7,exp_pc exp_pc2,-0.9979070990453545,0.13212112833737805,-1.2568645105866154,-0.7389496875040935,40,3.8506269206171835,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z8,exp_pc exp_pc2 exp_pc3,-0.8906550096285926,0.1080952083370796,-1.1025216179692685,-0.6787884012879166,40,6.32095202631843,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z9,exp_pc_l1,-1.1884099605296763,0.20197082124662027,-1.584272770173052,-0.7925471508863006,39,2.055647948754534,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
+Z10,exp_pc_l1 exp_pc2_l1,-1.205404985755313,0.20624085969132105,-1.6096370707503023,-0.8011729007603239,39,7.61476724118093,"Para o teste oficial de instrumentos fracos, rode Stata/04_iv_2sls_weakivtest.do"
