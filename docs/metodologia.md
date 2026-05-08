@@ -28,7 +28,7 @@ A condição de exogeneidade é substantiva e deve ser defendida economicamente.
 
 ## 4. 2SLS
 
-A segunda etapa usa a variação prevista de $pf$ pelo conjunto de instrumentos $Z$, mantendo os controles $y$ e $p_b $.
+A segunda etapa usa a variação prevista de $p_f$ pelo conjunto de instrumentos $Z$, mantendo os controles $y$ e $p_b $.
 
 ## 5. Instrumentos fracos
 
