@@ -1,0 +1,1113 @@
+----------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots\output/logs/s
+> tata_master.log
+  log type:  text
+ opened on:   7 May 2026, 23:28:15
+
+. 
+. do "Stata/config.do"
+
+. /********************************************************************
+>  config.do
+>  Configura caminhos do pacote
+> ********************************************************************/
+. 
+. clear all
+
+. set more off
+
+. version 17
+
+. 
+. * Diretório raiz: assume que o do-file foi chamado a partir da raiz.
+. global ROOT "`c(pwd)'"
+
+. global RAWDIR "$ROOT/data/raw"
+
+. global PROCDIR "$ROOT/data/processed"
+
+. global OUTDIR "$ROOT/output"
+
+. global TABLEDIR "$ROOT/output/tables"
+
+. global LOGDIR "$ROOT/output/logs"
+
+. global FIGDIR "$ROOT/output/figures"
+
+. 
+. cap mkdir "$PROCDIR"
+
+. cap mkdir "$OUTDIR"
+
+. cap mkdir "$TABLEDIR"
+
+. cap mkdir "$LOGDIR"
+
+. cap mkdir "$FIGDIR"
+
+. 
+. * Arquivo de entrada. O master tenta CSV, DTA e depois PARQUET.
+. global RAWCSV "$RAWDIR/chicken_demand.csv"
+
+. global RAWDTA "$RAWDIR/chicken_demand.dta"
+
+. global RAWPARQUET "$RAWDIR/chicken_demand.parquet"
+
+. 
+. di as text "ROOT: $ROOT"
+ROOT: C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots
+
+. 
+end of do-file
+
+. 
+. * Pacotes necessários
+. cap which ivreg2
+
+. if _rc ssc install ivreg2, replace
+
+. 
+. cap which ranktest
+
+. if _rc ssc install ranktest, replace
+
+. 
+. cap which weakivtest
+
+. if _rc ssc install weakivtest, replace
+
+. 
+. * Executa scripts
+. do "Stata/00_download_data.do"
+
+. /********************************************************************
+>  00_download_data.do
+>  Baixa a base broiler/chicken demand usada na lista.
+>  O arquivo é salvo como data/raw/chicken_demand.csv.
+> ********************************************************************/
+. 
+. do "Stata/config.do"
+
+. /********************************************************************
+>  config.do
+>  Configura caminhos do pacote
+> ********************************************************************/
+. 
+. clear all
+
+. set more off
+
+. version 17
+
+. 
+. * Diretório raiz: assume que o do-file foi chamado a partir da raiz.
+. global ROOT "`c(pwd)'"
+
+. global RAWDIR "$ROOT/data/raw"
+
+. global PROCDIR "$ROOT/data/processed"
+
+. global OUTDIR "$ROOT/output"
+
+. global TABLEDIR "$ROOT/output/tables"
+
+. global LOGDIR "$ROOT/output/logs"
+
+. global FIGDIR "$ROOT/output/figures"
+
+. 
+. cap mkdir "$PROCDIR"
+
+. cap mkdir "$OUTDIR"
+
+. cap mkdir "$TABLEDIR"
+
+. cap mkdir "$LOGDIR"
+
+. cap mkdir "$FIGDIR"
+
+. 
+. * Arquivo de entrada. O master tenta CSV, DTA e depois PARQUET.
+. global RAWCSV "$RAWDIR/chicken_demand.csv"
+
+. global RAWDTA "$RAWDIR/chicken_demand.dta"
+
+. global RAWPARQUET "$RAWDIR/chicken_demand.parquet"
+
+. 
+. di as text "ROOT: $ROOT"
+ROOT: C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots
+
+. 
+end of do-file
+
+. 
+. cap set httptimeout 120
+
+. 
+. local broiler_url "https://mitocw.ups.edu.ec/courses/economics/14-271-industrial-organization-i-fall-2005/assignment
+> s/broiler.csv"
+
+. 
+. cap confirm file "$RAWCSV"
+
+. if !_rc {
+.     di as result "Base já existe em $RAWCSV."
+Base já existe em C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/data/raw
+> /chicken_demand.csv.
+.     exit
+
+end of do-file
+
+. do "Stata/01_prepare_data.do"
+
+. /********************************************************************
+>  01_prepare_data.do
+>  Prepara a base da demanda por galeto
+> ********************************************************************/
+. 
+. do "Stata/config.do"
+
+. /********************************************************************
+>  config.do
+>  Configura caminhos do pacote
+> ********************************************************************/
+. 
+. clear all
+
+. set more off
+
+. version 17
+
+. 
+. * Diretório raiz: assume que o do-file foi chamado a partir da raiz.
+. global ROOT "`c(pwd)'"
+
+. global RAWDIR "$ROOT/data/raw"
+
+. global PROCDIR "$ROOT/data/processed"
+
+. global OUTDIR "$ROOT/output"
+
+. global TABLEDIR "$ROOT/output/tables"
+
+. global LOGDIR "$ROOT/output/logs"
+
+. global FIGDIR "$ROOT/output/figures"
+
+. 
+. cap mkdir "$PROCDIR"
+
+. cap mkdir "$OUTDIR"
+
+. cap mkdir "$TABLEDIR"
+
+. cap mkdir "$LOGDIR"
+
+. cap mkdir "$FIGDIR"
+
+. 
+. * Arquivo de entrada. O master tenta CSV, DTA e depois PARQUET.
+. global RAWCSV "$RAWDIR/chicken_demand.csv"
+
+. global RAWDTA "$RAWDIR/chicken_demand.dta"
+
+. global RAWPARQUET "$RAWDIR/chicken_demand.parquet"
+
+. 
+. di as text "ROOT: $ROOT"
+ROOT: C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots
+
+. 
+end of do-file
+
+. 
+. * ------------------------------------------------------------
+. * 1. Lê a base
+. * ------------------------------------------------------------
+. 
+. cap confirm file "$RAWCSV"
+
+. if _rc {
+.     cap confirm file "$RAWDTA"
+.     if _rc {
+.         di as text "Base não encontrada em data/raw/. Tentando baixar automaticamente..."
+.         do "Stata/00_download_data.do"
+.     }
+. }
+
+. 
+. cap confirm file "$RAWCSV"
+
+. if !_rc {
+.     import delimited using "$RAWCSV", clear varnames(1) case(lower)
+(encoding automatically selected: ISO-8859-1)
+(12 vars, 40 obs)
+. }
+
+. else {
+.     cap confirm file "$RAWDTA"
+.     if !_rc {
+.         use "$RAWDTA", clear
+.         rename *, lower
+.     }
+.     else {
+.         cap confirm file "$RAWPARQUET"
+.         if !_rc {
+.             di as error "Stata não lê Parquet nativamente sem ferramentas adicionais. Converta para CSV/DTA ou use R
+> /Python para preparar a base."
+.             exit 601
+.         }
+.         else {
+.             di as error "Base não encontrada. Coloque chicken_demand.csv ou chicken_demand.dta em data/raw/."
+.             exit 601
+.         }
+.     }
+. }
+
+. 
+. * ------------------------------------------------------------
+. * 2. Verifica variáveis mínimas
+. * ------------------------------------------------------------
+. 
+. foreach v in q y pchick pbeef pcor cpi time {
+  2.     cap confirm variable `v'
+  3.     if _rc {
+  4.         di as error "Variável ausente: `v'"
+  5.         exit 111
+  6.     }
+  7. }
+
+. 
+. * ------------------------------------------------------------
+. * 3. Evita conflitos de nomes
+. * ------------------------------------------------------------
+. 
+. * FIX: renomeia 'pf' do dataset bruto (preço do insumo/feed) para
+. *      liberar o nome para o log do preço do frango.
+. cap rename pf pf_feed
+
+. 
+. rename q q_raw
+
+. rename y income_real
+
+. 
+. * Se PC e PB já existirem, serão usados como preços reais.
+. cap confirm variable pc
+
+. if !_rc {
+.     gen double price_chick_real = pc
+. }
+
+. else {
+.     gen double price_chick_real = pchick / cpi
+. }
+
+. 
+. cap confirm variable pb
+
+. if !_rc {
+.     gen double price_beef_real = pb
+. }
+
+. else {
+.     gen double price_beef_real = pbeef / cpi
+. }
+
+. 
+. gen double price_corn_real = pcor / cpi
+
+. 
+. * Remove variáveis anteriores caso existam por acaso.
+. cap drop qc pf y pb pc pc2 pc3 pc_l1 pc2_l1 exp_pc exp_pc2 exp_pc3 exp_pc_l1 exp_pc2_l1
+
+. 
+. * ------------------------------------------------------------
+. * 4. Gera variáveis da lista
+. * ------------------------------------------------------------
+. 
+. gen double qc = ln(q_raw)
+
+. gen double pf = ln(price_chick_real)
+
+. gen double y  = ln(income_real)
+
+. gen double pb = ln(price_beef_real)
+
+. gen double pc = ln(price_corn_real)
+
+. 
+. sort time
+
+. tsset time
+
+Time variable: time, 51 to 90
+        Delta: 1 unit
+
+. 
+. gen double pc2    = pc^2
+
+. gen double pc3    = pc^3
+
+. gen double pc_l1  = L.pc
+(1 missing value generated)
+
+. gen double pc2_l1 = pc_l1^2
+(1 missing value generated)
+
+. 
+. gen double exp_pc    = exp(pc)
+
+. gen double exp_pc2   = exp(pc^2)
+
+. gen double exp_pc3   = exp(pc^3)
+
+. gen double exp_pc_l1  = exp(pc_l1)
+(1 missing value generated)
+
+. gen double exp_pc2_l1 = exp(pc_l1^2)
+(1 missing value generated)
+
+. 
+. * Mantém observações válidas nos modelos básicos.
+. drop if missing(qc, pf, y, pb, pc)
+(0 observations deleted)
+
+. 
+. save "$PROCDIR/chicken_demand_processed.dta", replace
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/data/processed/chick
+    > en_demand_processed.dta saved
+
+. export delimited using "$PROCDIR/chicken_demand_processed.csv", replace
+file C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/data/processed/chicke
+> n_demand_processed.csv saved
+
+. 
+. di as result "Base processada salva em data/processed/."
+Base processada salva em data/processed/.
+
+. 
+end of do-file
+
+. do "Stata/02_ols.do"
+
+. /********************************************************************
+>  02_ols.do
+>  Item 1: MQO com erros robustos
+> ********************************************************************/
+. 
+. do "Stata/config.do"
+
+. /********************************************************************
+>  config.do
+>  Configura caminhos do pacote
+> ********************************************************************/
+. 
+. clear all
+
+. set more off
+
+. version 17
+
+. 
+. * Diretório raiz: assume que o do-file foi chamado a partir da raiz.
+. global ROOT "`c(pwd)'"
+
+. global RAWDIR "$ROOT/data/raw"
+
+. global PROCDIR "$ROOT/data/processed"
+
+. global OUTDIR "$ROOT/output"
+
+. global TABLEDIR "$ROOT/output/tables"
+
+. global LOGDIR "$ROOT/output/logs"
+
+. global FIGDIR "$ROOT/output/figures"
+
+. 
+. cap mkdir "$PROCDIR"
+
+. cap mkdir "$OUTDIR"
+
+. cap mkdir "$TABLEDIR"
+
+. cap mkdir "$LOGDIR"
+
+. cap mkdir "$FIGDIR"
+
+. 
+. * Arquivo de entrada. O master tenta CSV, DTA e depois PARQUET.
+. global RAWCSV "$RAWDIR/chicken_demand.csv"
+
+. global RAWDTA "$RAWDIR/chicken_demand.dta"
+
+. global RAWPARQUET "$RAWDIR/chicken_demand.parquet"
+
+. 
+. di as text "ROOT: $ROOT"
+ROOT: C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots
+
+. 
+end of do-file
+
+. 
+. use "$PROCDIR/chicken_demand_processed.dta", clear
+
+. 
+. reg qc pf y pb, vce(robust)
+
+Linear regression                               Number of obs     =         40
+                                                F(3, 36)          =     341.07
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9620
+                                                Root MSE          =     .05954
+
+------------------------------------------------------------------------------
+             |               Robust
+          qc | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          pf |  -.3067484   .1092794    -2.81   0.008    -.5283774   -.0851195
+           y |   .8508982   .1451888     5.86   0.000     .5564417    1.145355
+          pb |   .0020137   .0663785     0.03   0.976     -.132608    .1366355
+       _cons |  -4.678205   1.182952    -3.95   0.000    -7.077344   -2.279066
+------------------------------------------------------------------------------
+
+. 
+. * Guarda resultados antes de mexer na base.
+. scalar N_ols = e(N)
+
+. 
+. tempfile olsresults
+
+. postfile H str20 model str20 term double estimate std_error conf_low conf_high p_value N using `olsresults', replace
+(file C:\Users\B03531~1\AppData\Local\Temp\21\ST_16d20_000001.tmp not found)
+
+. 
+. foreach v in pf y pb _cons {
+  2.     scalar b = _b[`v']
+  3.     scalar se = _se[`v']
+  4.     scalar cil = b - invnormal(0.975)*se
+  5.     scalar cih = b + invnormal(0.975)*se
+  6.     scalar pval = 2*ttail(e(df_r), abs(b/se))
+  7.     post H ("OLS_HC1") ("`v'") (b) (se) (cil) (cih) (pval) (N_ols)
+  8. }
+
+. 
+. postclose H
+
+. use `olsresults', clear
+
+. export delimited using "$TABLEDIR/stata_ols_results.csv", replace
+file C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/tables/stata_o
+> ls_results.csv saved
+
+. save "$TABLEDIR/stata_ols_results.dta", replace
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/tables/stata_
+    > ols_results.dta saved
+
+. 
+. di as result "MQO concluído. Resultado salvo em output/tables/stata_ols_results.csv"
+MQO concluído. Resultado salvo em output/tables/stata_ols_results.csv
+
+. 
+end of do-file
+
+. do "Stata/03_first_stage.do"
+
+. /********************************************************************
+>  03_first_stage.do
+>  Item 4: primeiros estágios para Z1...Z10
+> ********************************************************************/
+. 
+. do "Stata/config.do"
+
+. /********************************************************************
+>  config.do
+>  Configura caminhos do pacote
+> ********************************************************************/
+. 
+. clear all
+
+. set more off
+
+. version 17
+
+. 
+. * Diretório raiz: assume que o do-file foi chamado a partir da raiz.
+. global ROOT "`c(pwd)'"
+
+. global RAWDIR "$ROOT/data/raw"
+
+. global PROCDIR "$ROOT/data/processed"
+
+. global OUTDIR "$ROOT/output"
+
+. global TABLEDIR "$ROOT/output/tables"
+
+. global LOGDIR "$ROOT/output/logs"
+
+. global FIGDIR "$ROOT/output/figures"
+
+. 
+. cap mkdir "$PROCDIR"
+
+. cap mkdir "$OUTDIR"
+
+. cap mkdir "$TABLEDIR"
+
+. cap mkdir "$LOGDIR"
+
+. cap mkdir "$FIGDIR"
+
+. 
+. * Arquivo de entrada. O master tenta CSV, DTA e depois PARQUET.
+. global RAWCSV "$RAWDIR/chicken_demand.csv"
+
+. global RAWDTA "$RAWDIR/chicken_demand.dta"
+
+. global RAWPARQUET "$RAWDIR/chicken_demand.parquet"
+
+. 
+. di as text "ROOT: $ROOT"
+ROOT: C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots
+
+. 
+end of do-file
+
+. 
+. use "$PROCDIR/chicken_demand_processed.dta", clear
+
+. 
+. * Conjuntos de instrumentos excluídos.
+. global Z1  "pc"
+
+. global Z2  "pc pc2"
+
+. global Z3  "pc pc2 pc3"
+
+. global Z4  "pc_l1"
+
+. global Z5  "pc_l1 pc2_l1"
+
+. global Z6  "exp_pc"
+
+. global Z7  "exp_pc exp_pc2"
+
+. global Z8  "exp_pc exp_pc2 exp_pc3"
+
+. global Z9  "exp_pc_l1"
+
+. global Z10 "exp_pc_l1 exp_pc2_l1"
+
+. 
+. tempfile firststage
+
+. postfile H str5 model str80 instruments double F_robust p_value N using `firststage', replace
+(file C:\Users\B03531~1\AppData\Local\Temp\21\ST_16d20_000001.tmp not found)
+
+. 
+. forvalues i = 1/10 {
+  2.     local zlist "${Z`i'}"
+  3.     quietly regress pf y pb `zlist', vce(robust)
+  4.     quietly test `zlist'
+  5.     local F = r(F)
+  6.     local p = r(p)
+  7.     local N = e(N)
+  8.     post H ("Z`i'") ("`zlist'") (`F') (`p') (`N')
+  9. }
+
+. 
+. postclose H
+
+. use `firststage', clear
+
+. export delimited using "$TABLEDIR/stata_first_stage_results.csv", replace
+file C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/tables/stata_f
+> irst_stage_results.csv saved
+
+. save "$TABLEDIR/stata_first_stage_results.dta", replace
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/tables/stata_
+    > first_stage_results.dta saved
+
+. 
+. di as result "Primeiros estágios concluídos. Resultado salvo em output/tables/stata_first_stage_results.csv"
+Primeiros estágios concluídos. Resultado salvo em output/tables/stata_first_stage_results.csv
+
+. 
+end of do-file
+
+. do "Stata/04_iv_2sls_weakivtest.do"
+
+. /********************************************************************
+>  04_iv_2sls_weakivtest.do
+>  Itens 2 e 5: 2SLS + weakivtest
+> 
+>  O teste de instrumentos fracos pedido na lista é executado por:
+>      weakivtest
+>  após cada ivreg2.
+> ********************************************************************/
+. 
+. do "Stata/config.do"
+
+. /********************************************************************
+>  config.do
+>  Configura caminhos do pacote
+> ********************************************************************/
+. 
+. clear all
+
+. set more off
+
+. version 17
+
+. 
+. * Diretório raiz: assume que o do-file foi chamado a partir da raiz.
+. global ROOT "`c(pwd)'"
+
+. global RAWDIR "$ROOT/data/raw"
+
+. global PROCDIR "$ROOT/data/processed"
+
+. global OUTDIR "$ROOT/output"
+
+. global TABLEDIR "$ROOT/output/tables"
+
+. global LOGDIR "$ROOT/output/logs"
+
+. global FIGDIR "$ROOT/output/figures"
+
+. 
+. cap mkdir "$PROCDIR"
+
+. cap mkdir "$OUTDIR"
+
+. cap mkdir "$TABLEDIR"
+
+. cap mkdir "$LOGDIR"
+
+. cap mkdir "$FIGDIR"
+
+. 
+. * Arquivo de entrada. O master tenta CSV, DTA e depois PARQUET.
+. global RAWCSV "$RAWDIR/chicken_demand.csv"
+
+. global RAWDTA "$RAWDIR/chicken_demand.dta"
+
+. global RAWPARQUET "$RAWDIR/chicken_demand.parquet"
+
+. 
+. di as text "ROOT: $ROOT"
+ROOT: C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots
+
+. 
+end of do-file
+
+. 
+. use "$PROCDIR/chicken_demand_processed.dta", clear
+
+. 
+. cap which ivreg2
+
+. if _rc ssc install ivreg2, replace
+
+. 
+. cap which weakivtest
+
+. if _rc ssc install weakivtest, replace
+
+. 
+. * Conjuntos de instrumentos excluídos.
+. global Z1  "pc"
+
+. global Z2  "pc pc2"
+
+. global Z3  "pc pc2 pc3"
+
+. global Z4  "pc_l1"
+
+. global Z5  "pc_l1 pc2_l1"
+
+. global Z6  "exp_pc"
+
+. global Z7  "exp_pc exp_pc2"
+
+. global Z8  "exp_pc exp_pc2 exp_pc3"
+
+. global Z9  "exp_pc_l1"
+
+. global Z10 "exp_pc_l1 exp_pc2_l1"
+
+. 
+. tempfile ivresults
+
+. postfile H str5 model str80 instruments double beta_p std_error conf_low conf_high F_eff c_TSLS_5 c_TSLS_10 N using 
+> `ivresults', replace
+(file C:\Users\B03531~1\AppData\Local\Temp\21\ST_16d20_000001.tmp not found)
+
+. 
+. forvalues i = 1/10 {
+  2.     local zlist "${Z`i'}"
+  3.     di as text "Estimando modelo Z`i': `zlist'"
+  4. 
+.     quietly ivreg2 qc y pb (pf = `zlist'), robust first
+  5. 
+.     scalar b = _b[pf]
+  6.     scalar se = _se[pf]
+  7.     scalar ci_l = b - invnormal(0.975)*se
+  8.     scalar ci_h = b + invnormal(0.975)*se
+  9.     scalar nobs = e(N)
+ 10. 
+.     * weakivtest é a rotina principal de instrumentos fracos.
+.     quietly weakivtest
+ 11. 
+.     capture scalar feff = r(F_eff)
+ 12.     if _rc scalar feff = .
+ 13. 
+.     capture scalar c5 = r(c_TSLS_5)
+ 14.     if _rc scalar c5 = .
+ 15. 
+.     capture scalar c10 = r(c_TSLS_10)
+ 16.     if _rc scalar c10 = .
+ 17. 
+.     post H ("Z`i'") ("`zlist'") (b) (se) (ci_l) (ci_h) (feff) (c5) (c10) (nobs)
+ 18. }
+Estimando modelo Z1: pc
+Estimando modelo Z2: pc pc2
+Estimando modelo Z3: pc pc2 pc3
+Estimando modelo Z4: pc_l1
+Estimando modelo Z5: pc_l1 pc2_l1
+Estimando modelo Z6: exp_pc
+Estimando modelo Z7: exp_pc exp_pc2
+Estimando modelo Z8: exp_pc exp_pc2 exp_pc3
+Estimando modelo Z9: exp_pc_l1
+Estimando modelo Z10: exp_pc_l1 exp_pc2_l1
+
+. 
+. postclose H
+
+. use `ivresults', clear
+
+. 
+. gen str40 ci_95 = "[" + string(conf_low, "%9.4f") + "; " + string(conf_high, "%9.4f") + "]"
+
+. gen byte rejects_weak_5pct_TSLS = F_eff > c_TSLS_5 if !missing(F_eff, c_TSLS_5)
+
+. gen byte rejects_weak_10pct_TSLS = F_eff > c_TSLS_10 if !missing(F_eff, c_TSLS_10)
+
+. 
+. order model instruments beta_p ci_95 F_eff c_TSLS_5 c_TSLS_10 rejects_weak_5pct_TSLS rejects_weak_10pct_TSLS std_err
+> or conf_low conf_high N
+
+. 
+. export delimited using "$TABLEDIR/stata_iv_results_weakivtest.csv", replace
+file C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/tables/stata_i
+> v_results_weakivtest.csv saved
+
+. export excel using "$TABLEDIR/stata_iv_results_weakivtest.xlsx", firstrow(variables) replace
+file C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/tables/stata_i
+> v_results_weakivtest.xlsx saved
+
+. save "$TABLEDIR/stata_iv_results_weakivtest.dta", replace
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/tables/stata_
+    > iv_results_weakivtest.dta saved
+
+. 
+. di as result "2SLS + weakivtest concluídos. Resultado salvo em output/tables/stata_iv_results_weakivtest.csv"
+2SLS + weakivtest concluídos. Resultado salvo em output/tables/stata_iv_results_weakivtest.csv
+
+. 
+end of do-file
+
+. do "Stata/05_visualizations.do"
+
+. /********************************************************************
+>  05_visualizations.do
+>  Gráficos para ilustrar os resultados da Lista 1
+> ********************************************************************/
+. 
+. do "Stata/config.do"
+
+. /********************************************************************
+>  config.do
+>  Configura caminhos do pacote
+> ********************************************************************/
+. 
+. clear all
+
+. set more off
+
+. version 17
+
+. 
+. * Diretório raiz: assume que o do-file foi chamado a partir da raiz.
+. global ROOT "`c(pwd)'"
+
+. global RAWDIR "$ROOT/data/raw"
+
+. global PROCDIR "$ROOT/data/processed"
+
+. global OUTDIR "$ROOT/output"
+
+. global TABLEDIR "$ROOT/output/tables"
+
+. global LOGDIR "$ROOT/output/logs"
+
+. global FIGDIR "$ROOT/output/figures"
+
+. 
+. cap mkdir "$PROCDIR"
+
+. cap mkdir "$OUTDIR"
+
+. cap mkdir "$TABLEDIR"
+
+. cap mkdir "$LOGDIR"
+
+. cap mkdir "$FIGDIR"
+
+. 
+. * Arquivo de entrada. O master tenta CSV, DTA e depois PARQUET.
+. global RAWCSV "$RAWDIR/chicken_demand.csv"
+
+. global RAWDTA "$RAWDIR/chicken_demand.dta"
+
+. global RAWPARQUET "$RAWDIR/chicken_demand.parquet"
+
+. 
+. di as text "ROOT: $ROOT"
+ROOT: C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots
+
+. 
+end of do-file
+
+. 
+. cap mkdir "$FIGDIR"
+
+. 
+. * ------------------------------------------------------------
+. * 1. Séries temporais padronizadas das variáveis principais
+. * ------------------------------------------------------------
+. use "$PROCDIR/chicken_demand_processed.dta", clear
+
+. 
+. cap confirm variable year
+
+. if !_rc local xvar year
+
+. else local xvar time
+
+. 
+. foreach v in qc pf y pb pc {
+  2.     quietly summarize `v'
+  3.     gen double z_`v' = (`v' - r(mean))/r(sd)
+  4. }
+
+. 
+. twoway ///
+>     (line z_qc `xvar', lpattern(solid)) ///
+>     (line z_pf `xvar', lpattern(dash)) ///
+>     (line z_y  `xvar', lpattern(shortdash)) ///
+>     (line z_pb `xvar', lpattern(dot)) ///
+>     (line z_pc `xvar', lpattern(longdash)), ///
+>     legend(order(1 "qc" 2 "pf" 3 "y" 4 "pb" 5 "pc") rows(1)) ///
+>     ytitle("Variável padronizada") xtitle("Ano") ///
+>     title("Séries temporais das variáveis principais")
+
+. graph export "$FIGDIR/01_series_temporais_variaveis_principais_stata.png", replace width(2400)
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/figures/01_se
+    > ries_temporais_variaveis_principais_stata.png saved as PNG format
+
+. 
+. * ------------------------------------------------------------
+. * 2. Dispersão qc versus pf com reta MQO
+. * ------------------------------------------------------------
+. twoway (scatter qc pf) (lfit qc pf), ///
+>     xtitle("pf = log(preço real do galeto)") ///
+>     ytitle("qc = log(quantidade consumida per capita)") ///
+>     title("Correlação bruta entre quantidade e preço do galeto") ///
+>     legend(off)
+
+. graph export "$FIGDIR/02_scatter_qc_pf_mqo_stata.png", replace width(2400)
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/figures/02_sc
+    > atter_qc_pf_mqo_stata.png saved as PNG format
+
+. 
+. * ------------------------------------------------------------
+. * 3. Coeficientes beta_p: MQO e 2SLS
+. * ------------------------------------------------------------
+. tempfile iv ols coef
+
+. import delimited using "$TABLEDIR/stata_iv_results_weakivtest.csv", clear
+(encoding automatically selected: ISO-8859-1)
+(13 vars, 10 obs)
+
+. keep model beta_p conf_low conf_high
+
+. save `iv', replace
+(file C:\Users\B03531~1\AppData\Local\Temp\21\ST_16d20_000001.tmp not found)
+file C:\Users\B03531~1\AppData\Local\Temp\21\ST_16d20_000001.tmp saved as .dta format
+
+. 
+. import delimited using "$TABLEDIR/stata_ols_results.csv", clear
+(encoding automatically selected: ISO-8859-1)
+(8 vars, 4 obs)
+
+. keep if term == "pf"
+(3 observations deleted)
+
+. replace model = "MQO"
+(1 real change made)
+
+. rename estimate beta_p
+
+. keep model beta_p conf_low conf_high
+
+. append using `iv'
+
+. 
+. gen order_model = .
+(11 missing values generated)
+
+. replace order_model = 1 if model == "MQO"
+(1 real change made)
+
+. forvalues i = 1/10 {
+  2.     replace order_model = `i' + 1 if model == "Z`i'"
+  3. }
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+
+. sort order_model
+
+. 
+. twoway (rcap conf_low conf_high order_model, horizontal) ///
+>        (scatter order_model beta_p), ///
+>        ylab(1 "MQO" 2 "Z1" 3 "Z2" 4 "Z3" 5 "Z4" 6 "Z5" 7 "Z6" 8 "Z7" 9 "Z8" 10 "Z9" 11 "Z10", angle(0)) ///
+>        xline(0, lpattern(dash)) ///
+>        xtitle("beta_p") ytitle("Modelo") ///
+>        title("Elasticidade-preço estimada: MQO versus 2SLS") ///
+>        legend(off)
+
+. graph export "$FIGDIR/03_coeficientes_beta_p_mqo_2sls_stata.png", replace width(2400)
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/figures/03_co
+    > eficientes_beta_p_mqo_2sls_stata.png saved as PNG format
+
+. 
+. * ------------------------------------------------------------
+. * 4. F efetiva do weakivtest por especificação
+. * ------------------------------------------------------------
+. import delimited using "$TABLEDIR/stata_iv_results_weakivtest.csv", clear
+(encoding automatically selected: ISO-8859-1)
+(13 vars, 10 obs)
+
+. gen model_num = _n
+
+. 
+. twoway (bar f_eff model_num, barwidth(.65)) ///
+>        (scatter f_eff model_num), ///
+>        yline(10, lpattern(dash)) ///
+>        yline(23.1, lpattern(dot)) ///
+>        xlab(1 "Z1" 2 "Z2" 3 "Z3" 4 "Z4" 5 "Z5" 6 "Z6" 7 "Z7" 8 "Z8" 9 "Z9" 10 "Z10") ///
+>        xtitle("Conjunto de instrumentos") ///
+>        ytitle("F efetiva de Montiel Olea-Pflueger") ///
+>        title("Força dos instrumentos por especificação") ///
+>        legend(off)
+
+. graph export "$FIGDIR/04_f_instrumentos_por_modelo_stata.png", replace width(2400)
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/figures/04_f_
+    > instrumentos_por_modelo_stata.png saved as PNG format
+
+. 
+. * ------------------------------------------------------------
+. * 5. Primeiro estágio: pf contra instrumentos selecionados
+. * ------------------------------------------------------------
+. use "$PROCDIR/chicken_demand_processed.dta", clear
+
+. 
+. twoway (scatter pf pc) (lfit pf pc), title("pf contra pc") legend(off) name(g1, replace)
+
+. twoway (scatter pf pc_l1) (lfit pf pc_l1), title("pf contra pc defasado") legend(off) name(g2, replace)
+
+. twoway (scatter pf exp_pc) (lfit pf exp_pc), title("pf contra exp(pc)") legend(off) name(g3, replace)
+
+. twoway (scatter pf exp_pc_l1) (lfit pf exp_pc_l1), title("pf contra exp(pc defasado)") legend(off) name(g4, replace)
+
+. graph combine g1 g2 g3 g4, title("Primeiro estágio: preço do galeto e instrumentos selecionados")
+
+. graph export "$FIGDIR/05_primeiro_estagio_scatter_instrumentos_stata.png", replace width(2400)
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/figures/05_pr
+    > imeiro_estagio_scatter_instrumentos_stata.png saved as PNG format
+
+. 
+. * ------------------------------------------------------------
+. * 6. Resíduos versus ajustados no MQO
+. * ------------------------------------------------------------
+. reg qc pf y pb, vce(robust)
+
+Linear regression                               Number of obs     =         40
+                                                F(3, 36)          =     341.07
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.9620
+                                                Root MSE          =     .05954
+
+------------------------------------------------------------------------------
+             |               Robust
+          qc | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          pf |  -.3067484   .1092794    -2.81   0.008    -.5283774   -.0851195
+           y |   .8508982   .1451888     5.86   0.000     .5564417    1.145355
+          pb |   .0020137   .0663785     0.03   0.976     -.132608    .1366355
+       _cons |  -4.678205   1.182952    -3.95   0.000    -7.077344   -2.279066
+------------------------------------------------------------------------------
+
+. predict double fitted_ols, xb
+
+. predict double resid_ols, resid
+
+. 
+. twoway (scatter resid_ols fitted_ols) (lowess resid_ols fitted_ols), ///
+>     yline(0, lpattern(dash)) ///
+>     xtitle("Valores ajustados") ytitle("Resíduos") ///
+>     title("Resíduos versus valores ajustados no MQO") ///
+>     legend(off)
+
+. graph export "$FIGDIR/06_residuos_versus_ajustados_mqo_stata.png", replace width(2400)
+file
+    C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots/output/figures/06_re
+    > siduos_versus_ajustados_mqo_stata.png saved as PNG format
+
+. 
+. di as result "Gráficos Stata salvos em output/figures/."
+Gráficos Stata salvos em output/figures/.
+
+. 
+end of do-file
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\B03531855158\Documents\Replication\lista1EI_replication_package_v4_downloads_plots\output/logs/s
+> tata_master.log
+  log type:  text
+ closed on:   7 May 2026, 23:28:33
+----------------------------------------------------------------------------------------------------------------------
