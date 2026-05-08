@@ -3,10 +3,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = ROOT / "data" / "raw"
 PROCESSED_DIR = ROOT / "data" / "processed"
-TABLE_DIR = ROOT / "output" / "tables"
-FIG_DIR = ROOT / "output" / "figures"
-LOG_DIR = ROOT / "output" / "logs"
 
+# Adicionando a subpasta / Python em cada diretório de saída
+TABLE_DIR = ROOT / "output" / "tables" / "Python"
+FIG_DIR = ROOT / "output" / "figures" / "Python"
+LOG_DIR = ROOT / "output" / "logs" / "Python"
+
+# O loop abaixo já cuidará de criar as pastas automaticamente, 
+# incluindo a subpasta 'Python' graças ao argumento parents=True
 for d in [RAW_DIR, PROCESSED_DIR, TABLE_DIR, FIG_DIR, LOG_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
